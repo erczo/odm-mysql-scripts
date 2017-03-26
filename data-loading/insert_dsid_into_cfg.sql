@@ -25,18 +25,9 @@ datastreamname like 'Air Temp Deg C%Avg' AND
 datastreamname not like 'Air Temp Deg C% m %Avg' AND 
 MC_Name = "UCNRS";
 
--- Soil Temperature <-- this is not used in the dashboard
--- 80 DSID's if all are allowed.  22 DSID's if 4 inch depth is used.
+-- Wind Speed 
 INSERT INTO cfg_load_datavalues_day_mma (DatastreamID) 
 SELECT DatastreamID FROM datastreams 
-WHERE 
-datastreamname like 'Soil Temp Deg C % Avg' AND 
-MC_Name = "UCNRS";
-
--- Wind Speed 
--- Daytime vs nighttime?
-INSERT INTO cfg_load_datavalues_day_mma (DatastreamID) 
-SELECT DatastreamID,datastreamname FROM datastreams 
 WHERE 
 datastreamname like 'Wind Speed m s%Avg' AND 
 MC_Name = "UCNRS";
@@ -49,8 +40,16 @@ datastreamname like 'Relative Humidity Per % Avg' AND
 MC_Name = "UCNRS";
 
 -- Barometric Pressure
-SELECT DatastreamID,datastreamname FROM datastreams 
+INSERT INTO cfg_load_datavalues_day_mma (DatastreamID) 
+SELECT DatastreamID FROM datastreams 
 WHERE 
 datastreamname like 'Barometric Pressure mbar % Avg' AND 
 MC_Name = "UCNRS";
 
+-- Soil Temperature <-- this is not used in the dashboard
+-- 80 DSID's if all are allowed.  22 DSID's if 4 inch depth is used.
+INSERT INTO cfg_load_datavalues_day_mma (DatastreamID) 
+SELECT DatastreamID FROM datastreams 
+WHERE 
+datastreamname like 'Soil Temp Deg C % Avg' AND 
+MC_Name = "UCNRS";
