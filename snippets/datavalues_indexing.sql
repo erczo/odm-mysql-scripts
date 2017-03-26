@@ -42,6 +42,14 @@ DROP INDEX `datavalues_UCNRS_LocalDateTime` ON `datavalues_UCNRS`;
 CREATE INDEX `ix_datavalues_UCNRS_1` ON `datavalues_UCNRS` (`DatastreamID`, `LocalDateTime`) USING BTREE;
 CREATE INDEX `ix_datavalues_UCNRS_2` ON `datavalues_UCNRS` (`LocalDateTime`, `DatastreamID`) USING BTREE;
 
+-- Or do it all at once!
+ALTER TABLE `datavalues_UCNRS`
+	DROP INDEX `ValueID`,
+	DROP INDEX `datavalues_UCNRS_DatastreamID`,
+	DROP INDEX `datavalues_UCNRS_LocalDateTime`,
+	ADD INDEX `ix_datavalues_UCNRS_1` (`DatastreamID`, `LocalDateTime`) USING BTREE,
+	ADD INDEX `ix_datavalues_UCNRS_2` (`LocalDateTime`, `DatastreamID`) USING BTREE;
+
 ANALYZE TABLE `datavalues_UCNRS`;
 
 --
