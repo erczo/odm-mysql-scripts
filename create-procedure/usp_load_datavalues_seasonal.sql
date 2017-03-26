@@ -58,7 +58,7 @@ BEGIN
     v.DerivedFromID,
     v.DatastreamID
   FROM datavalues_day AS v
-  WHERE v.LocalDateTime < CAST(MAKEDATE(pYear, 1) AS DATETIME);
+  WHERE v.LocalDateTime < CAST(MAKEDATE(pYear + 1, 1) AS DATETIME);
 
   -- Group datavalues by datastream and month, perform AVG aggregation on MIN/MAX/AVG datavalues
   INSERT INTO tmp_datavalues_grouped (DatastreamID, LocalDateTime, ValueID, UTCOffset, DerivedFromID, DataValue_Avg)
