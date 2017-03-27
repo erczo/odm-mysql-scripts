@@ -48,8 +48,8 @@ ALTER TABLE `datavalues_UCNRS`
 	DROP INDEX `ValueID`,
 	DROP INDEX `datavalues_UCNRS_DatastreamID`,
 	DROP INDEX `datavalues_UCNRS_LocalDateTime`,
-	ADD INDEX `ix_datavalues_UCNRS_2` (`LocalDateTime`, `DatastreamID`) USING BTREE;
 	ADD INDEX `ix_datavalues_UCNRS_1` (`DatastreamID`, `LocalDateTime`) USING BTREE,
+	ADD INDEX `ix_datavalues_UCNRS_2` (`LocalDateTime`, `DatastreamID`) USING BTREE;
 ANALYZE TABLE `datavalues_UCNRS`;
 
 -- Angelo
@@ -58,8 +58,8 @@ ALTER TABLE `datavalues2`
 	DROP INDEX `ValueID`,
 	DROP INDEX `datavalues2_DatastreamID`,
 	DROP INDEX `datavalues2_LocalDateTime`,
-	ADD INDEX `ix_datavalues2_2` (`LocalDateTime`, `DatastreamID`) USING BTREE;
 	ADD INDEX `ix_datavalues2_1` (`DatastreamID`, `LocalDateTime`) USING BTREE,
+	ADD INDEX `ix_datavalues2_2` (`LocalDateTime`, `DatastreamID`) USING BTREE;
 ANALYZE TABLE `datavalues2`;
 
 
