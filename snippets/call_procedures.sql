@@ -12,9 +12,14 @@ SET @startDateTime = '1980-01-01 00:00:00';
 SET @endDateTime = ADDDATE(CURDATE(), 1);
 
 -- Call SPs
-CALL usp_load_datavalues_day_mma_UCNRS(@startDateTime, @endDateTime);
-CALL usp_load_datavalues_day_sum_UCNRS(@startDateTime, @endDateTime);
-CALL usp_load_datavalues_month(@startDateTime, @endDateTime);
+CALL usp_load_datavalues_day_mma_UCNRS(@startDateTime, @endDateTime);  -- 13 minutes
+CALL usp_load_datavalues_day_sum_UCNRS(@startDateTime, @endDateTime);  -- 27 seconds
+CALL usp_load_datavalues_day_mma_dv2(@startDateTime, @endDateTime);  -- 24 minutes
+CALL usp_load_datavalues_day_sum_dv2(@startDateTime, @endDateTime);  -- 5 minutes
+CALL usp_load_datavalues_month(@startDateTime, @endDateTime);  -- 6 sec
+CALL usp_load_datavalues_seasonal(1997);
+CALL usp_load_datavalues_seasonal(1998);
+CALL usp_load_datavalues_seasonal(1999);
 CALL usp_load_datavalues_seasonal(2000);
 CALL usp_load_datavalues_seasonal(2001);
 CALL usp_load_datavalues_seasonal(2002);
