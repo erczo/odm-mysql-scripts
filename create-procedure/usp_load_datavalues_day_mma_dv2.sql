@@ -3,11 +3,11 @@
  *
  * NOTES:
  *   - The procedure is re-runnable and can be used to insert and update daily values as needed.
- * 
+ *
  * Dependencies:
  *   cfg_load_datavalues_day_mma - must contain datastream IDs to evaluate
  *   datavalues2 - should contain values within the desired days
- *   
+ *
  * Parameters:
  *   pStartDateTime - the starting day (inclusive)
  *   pEndDateTime - the ending day (exclusive)
@@ -31,8 +31,10 @@ BEGIN
     `DataValue` double DEFAULT NULL,
     `LocalDateTime` datetime NOT NULL,
     `UTCOffset` tinyint(4) NOT NULL,
+    `QualifierID` mediumint(8) unsigned NOT NULL,
     `DatastreamID` smallint(5) unsigned NOT NULL,
-    KEY `ix_tmp_datavalues_1` (`DatastreamID`, `LocalDateTime`)
+    KEY `ix_tmp_datavalues_1` (`DatastreamID`, `LocalDateTime`),
+    KEY `ix_tmp_datavalues_2` (`QualifierID`)
   );
 
   -- Temp table to store aggregated values, grouped by datastream and day
@@ -48,17 +50,27 @@ BEGIN
   );
 
   -- Collect datavalues for configured datastreams, truncate time component
-  INSERT INTO tmp_datavalues (ValueID, DataValue, LocalDateTime, UTCOffset, DatastreamID)
+  INSERT INTO tmp_datavalues (ValueID, DataValue, LocalDateTime, UTCOffset, QualifierID, DatastreamID)
   SELECT
     v.ValueID,
     v.DataValue,
     CAST(DATE(v.LocalDateTime) AS DATETIME),
     v.UTCOffset,
+    v.QualifierID,
     v.DatastreamID
   FROM datavalues2 AS v
     INNER JOIN cfg_load_datavalues_day_mma AS c ON v.DatastreamID = c.DatastreamID
   WHERE v.LocalDateTime >= CAST(DATE(pStartDateTime) AS DATETIME)
     AND v.LocalDateTime < CAST(DATE(pEndDateTime) AS DATETIME);
+
+  -- Remove datavalues (FROM tmp!) that are not qualified
+  -- NOTE: Could be added to above query; but wanted to use only DatastreamID/LocalDateTime in the initial fetch
+  DELETE FROM tmp_datavalues
+  WHERE QualifierID IN (SELECT QualifierID
+    FROM qualifiers
+    WHERE QualifierCode = 'VB' OR QualifierCode LIKE 'VB %'
+      OR QualifierCode = 'VE' OR QualifierCode LIKE 'VE %'
+      OR QualifierCode = 'X' OR QualifierCode LIKE 'X %');
 
   -- Group datavalues by datastream and day, perform MIN/MAX/AVG aggregations
   INSERT INTO tmp_datavalues_grouped (DatastreamID, LocalDateTime, ValueID, UTCOffset, DataValue_Min, DataValue_Max, DataValue_Avg)
@@ -72,10 +84,10 @@ BEGIN
     AVG(DataValue)
   FROM tmp_datavalues
   GROUP BY
-    DatastreamID, 
+    DatastreamID,
     LocalDateTime;
 
-  --  
+  --
   -- Insert/update daily datavalues
   -- NOTE: Requires a unique key on DatastreamID, LocalDateTime
   --
