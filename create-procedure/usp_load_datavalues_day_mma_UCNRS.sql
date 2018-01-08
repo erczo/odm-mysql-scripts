@@ -66,11 +66,11 @@ BEGIN
   -- Remove datavalues (FROM tmp!) that are not qualified
   -- NOTE: Could be added to above query; but wanted to use only DatastreamID/LocalDateTime in the initial fetch
   DELETE FROM tmp_datavalues
-  WHERE QualifierID IN (SELECT QualifierID
+  WHERE (DataValue = -9999) OR (QualifierID IN (SELECT QualifierID
     FROM qualifiers
     WHERE QualifierCode = 'VB' OR QualifierCode LIKE 'VB %'
       OR QualifierCode = 'VE' OR QualifierCode LIKE 'VE %'
-      OR QualifierCode = 'X' OR QualifierCode LIKE 'X %');
+      OR QualifierCode = 'X' OR QualifierCode LIKE 'X %'));
 
   -- Group datavalues by datastream and day, perform MIN/MAX/AVG aggregations
   INSERT INTO tmp_datavalues_grouped (DatastreamID, LocalDateTime, ValueID, UTCOffset, DataValue_Min, DataValue_Max, DataValue_Avg)

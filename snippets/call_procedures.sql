@@ -37,5 +37,6 @@ CALL usp_load_datavalues_seasonal(2013);
 CALL usp_load_datavalues_seasonal(2014);
 CALL usp_load_datavalues_seasonal(2015);
 CALL usp_load_datavalues_seasonal(2016);
+CALL usp_load_datavalues_seasonal(2017);
 
 -- DONE!
